@@ -40,20 +40,28 @@ model Session {
 }
 
 model Event {
-  id               Int      @id @default(autoincrement())
-  side             Site     @relation(fields: [siteId], references: [id])
-  siteId           Int      @map("site_id")
-  url              String
-  referrer         String?
-  screenWidth      Int      @map("screen_width")
-  screenHeight     Int      @map("screen_height")
-  country          String?
-  sessionId        String   @map("session_id")
-  maxScroll        Int      @map("max_scroll")
-  createdAt        DateTime @default(now()) @map("created_at")
-  session          Session? @relation(fields: [sessionSiteId, sessionSessionId], references: [siteId, sessionId])
-  sessionSiteId    Int?
-  sessionSessionId String?
+  id        Int     @id @default(autoincrement())
+  siteId    Int
+  sessionId String
+  session   Session @relation(fields: [siteId, sessionId], references: [siteId, sessionId])
 
+  url          String
+  referrer     String?
+  screenWidth  Int     @map("screen_width")
+  screenHeight Int     @map("screen_height")
+  country      String?
+  maxScroll    Int     @map("max_scroll")
+  userAgent    String? @map("user_agent")
+  language     String? @map("language")
+  utmSource    String? @map("utm_source")
+  utmMedium    String? @map("utm_medium")
+  utmTerm      String? @map("utm_term")
+  utmContent   String? @map("utm_content")
+  utmCampaign  String? @map("utm_campaign")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  site      Site     @relation(fields: [siteId], references: [id])
+
+  @@index([siteId])
   @@map("events")
 }
